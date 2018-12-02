@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Header from './components/Header';
+//import Circle from './components/Circle'
+import Cross from './components/Cross';
 
 export default class App extends React.Component {
   render() {
@@ -12,9 +14,7 @@ export default class App extends React.Component {
         <View style={styles.vline2} />
         <View style={styles.hline1} />
         <View style={styles.hline2} />
-        <View style={styles.cross1} />
-        <View style={styles.cross2} />
-        <View style={styles.circle} />
+        <Cross xTranslate = {0} yTranslate = {90} />      
       </View>
     );
   }
@@ -61,32 +61,5 @@ const styles = StyleSheet.create({
     marginTop: 85,
     borderBottomWidth: 3,
     position: 'absolute',
-  },
-  cross1: {
-    width : 100,
-    height: 8,
-    top: 130,
-    left: 18,
-    transform: [{rotate: '45deg'}],
-    backgroundColor: 'black',
-    position: 'absolute',
-  },
-  cross2: {
-    width : 100,
-    height: 8,
-    top: 130,
-    left: 18,
-    transform: [{rotate: '135deg'}],
-    backgroundColor: 'black',
-    position: 'absolute',
-  },
-  circle: {
-    width : 90,
-    height: 90,
-    top: 190,
-    left: 225,
-    borderRadius: 50,
-    borderWidth: 6,    
-    position: 'absolute',
-  }
+  } 
 });
