@@ -1,20 +1,31 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native';
 import Header from './components/Header';
-//import Circle from './components/Circle'
+import Circle from './components/Circle'
 import Cross from './components/Cross';
 
 export default class App extends React.Component {
+
+  handleTouch(event) {
+    console.log("event log: ",event);
+  }
   render() {
     return (
       <View style={styles.container}>
         <Header />
-        <View style={styles.board} />
-        <View style={styles.vline1} />
-        <View style={styles.vline2} />
-        <View style={styles.hline1} />
-        <View style={styles.hline2} />
-        <Cross xTranslate = {0} yTranslate = {90} />      
+        <TouchableWithoutFeedback  onPress={ () => {
+            console.log("inside function");
+          }
+        }>       
+          <View style={styles.board}>
+            <View style={styles.vline1} />
+            <View style={styles.vline2} />
+            <View style={styles.hline1} />
+            <View style={styles.hline2} />          
+          </View>
+        </TouchableWithoutFeedback>
+        <Cross xTranslate = {0} yTranslate = {90} /> 
+        <Circle xTranslate= {-100} yTranslate = {90} /> 
       </View>
     );
   }
@@ -35,31 +46,41 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   vline1: {
-    width: 100,
-    height: 312,
-    marginTop: 85,
-    borderLeftWidth: 3,
+    width: 3,
+    height: 309,
+    marginTop: 0,    
+    transform: [
+      {translateX: 100}
+    ],
     position: 'absolute',
+    backgroundColor: 'black'
   },
   vline2: {
-    width: 100,
-    height: 312,
-    marginTop: 85,
-    borderRightWidth: 3,
+     width: 3,
+    height: 309,
+    marginTop: 0,    
+    transform: [
+      {translateX: 200}
+    ],
     position: 'absolute',
+    backgroundColor: 'black'
   },
   hline1: {
-    width: 312,
-    height: 100,
-    marginTop: 85,
-    borderBottomWidth: 3,
+    width: 309,
+    height: 3,        
     position: 'absolute',
+    backgroundColor: 'black',
+    transform: [
+      {translateY: 100}
+    ]
   },
   hline2: {
-    width: 312,
-    height: 200,
-    marginTop: 85,
-    borderBottomWidth: 3,
+    width: 309,
+    height: 3,        
     position: 'absolute',
+    backgroundColor: 'black',
+    transform: [
+      {translateY: 200}
+    ]
   } 
 });
