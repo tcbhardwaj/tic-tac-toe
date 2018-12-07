@@ -22,13 +22,14 @@ export default class Circle extends React.Component {
     container: {      
       alignItems: 'center',      
       position: 'absolute',
-    },
-   
+      marginTop: 2
+    },   
     circle: {
       width: 90,
       height: 90,     
       borderRadius: 50,
-      borderWidth: 6,    
+      borderWidth: 6,          
       position: 'absolute',
+      borderColor: 'deepskyblue'      
     }
   });
