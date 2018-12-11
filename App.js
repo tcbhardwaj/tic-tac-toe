@@ -1,9 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, TouchableWithoutFeedback, Button } from 'react-native';
 import Header from './components/Header';
 import Circle from './components/Circle';
 import Cross from './components/Cross';
 import { centerPoint, areas, winCondition } from './constants/game';
+
 
 export default class App extends React.Component {
   constructor() {
@@ -18,14 +19,24 @@ export default class App extends React.Component {
       player1: [],
       player2: [],
       player1Turn: true,
-      winner: -1
+      winner: -1,
     };
   }
 
+  resetGame(event) {
+    this.setState({
+      player1: [],
+      player2: [],
+      player1Turn: true,
+      winner: -1,
+    })
+  }
   playGame(event) {
     const { locationX, locationY } = event.nativeEvent;
-    const {player1, player2, player1Turn, winner} = this.state;
-    
+    const { player1, player2, player1Turn, winner } = this.state;
+    if(winner != -1) {
+      return;
+    }
     const area = areas.find(
       d =>
         locationX >= d.startx &&
@@ -43,70 +54,68 @@ export default class App extends React.Component {
         player2: player2.concat(area.id),
         player1Turn: true,
       });
-    }
-    const input = player1.concat(player2);
-    console.log("input.length:", input.length);
-    if(input.length === 8 && winner !== 0) {
-      this.draw();      
-    }
-
-    if(input.length >= 4) {
-      let res = this.calculateWinner(player1);
-      console.log("res:",res);
-      if(res.length > 0) {
-        //player1 is winner
-        console.log("player1 win");
-        return;
-      }
-      res = this.calculateWinner(player2);
-      if(res.length > 0) {
-        //player2 is winner
-        console.log("player2 win");
-        return;
-      }
-    }
-    
+    }    
   }
 
-  calculateWinner(input) {
-    console.log("inside winner input:", input);
-    const res = winCondition.filter(item => {
-      if((input.sort().toString()).indexOf(item.toString()) > -1 ){
-        return;
-      }
+  calculateWinner(input) {      
+    const res = winCondition.find(element => {
+      return this.checkValue(element, input)
     });
     return res;
   }
 
-  draw() {
-    console.log("inside draw");
+  checkValue(value, input) {
+    let i = 0;
+    let flag = true;
+    while(i < value.length && flag) {
+      if(input.indexOf(value[i]) > -1) {      	
+        i++;
+      } else {
+        flag = false;
+      }
+    }   
+    return flag;
+  }
+
+  draw() {    
     this.setState({
-        winner: 0
+      winner: 0,
+    });
+  }
+
+  winner(player) {
+    this.setState({
+      winner: player,
     })
   }
-  // componentDidUpdate() {
-  //   const {player1, player2, winner} = this.state;
-  //   const input = player1.concat(player2);
 
-  //   // if(input.length >= 5) {
-  //   //   let res = this.calculateWinner(player1);
-  //   //   if(res) {
-  //   //     //player1 is winner
-  //   //     return;
-  //   //   }
-  //   //   res = this.calculateWinner(player2);
-  //   //   if(res) {
-  //   //     //player2 is winner
-  //   //     return;
-  //   //   }
-  //   // }
+  componentDidUpdate() {
+    const { player1, player2, winner } = this.state;
+    const input = player1.concat(player2);
+    console.log(input.length, winner);
+    if (input.length >= 5 && input.length <= 9) {
+      let res = this.calculateWinner(player1);      
+      if (res && winner != 1 && winner != 0) {
+        //player1 is winner        
+        this.winner(1);
+        return;
+      }
+      res = this.calculateWinner(player2);      
+      if (res && winner != 2 && winner != 0) {
+        //player2 is winner        
+        this.winner(2);
+        return;
+      }
+    }
 
-  //   if(input.length === 9 && winner != 0) {
-  //     this.draw();      
-  //   }
-  // }
+    if (input.length === 9 && winner === -1) {
+      this.draw();
+      return;
+    }
+  }
+
   render() {
-    const {winner} = this.state;
+    const { winner } = this.state;
     return (
       <View style={styles.container}>
         <Header />
@@ -131,14 +140,36 @@ export default class App extends React.Component {
           return (
             <Circle
               key={i}
-              color= 'deepskyblue'
+              color="deepskyblue"
               xTranslate={centerPoint[d].x}
               yTranslate={centerPoint[d].y}
             />
           );
         })}
-        <View style={{ flex: 1, margin: 20 }}>          
-          {winner === 0 && <Text style={{ fontSize: 20, fontWeight: 'bold', paddingRight: 30 }}>Its a draw  </Text>}     
+        <View style={{ flex: 1, margin: 20 }}>
+          {winner === 0 && (
+            <Text
+              style={styles.drawMsg}>
+              It's a draw
+            </Text>
+          )}
+          {winner === 1 && (
+            <Text
+              style={styles.winningMsgX}>
+              X wins the game
+            </Text>
+          )}
+          {winner === 2 && (
+            <Text
+              style={styles.winningMsgO}>
+              O wins the game
+            </Text>
+          )}
+          {winner != -1 && (
+            <View style={styles.resetButton}>
+              <Button onPress={event => this.resetGame(event)} title="Press to play again" />                         
+            </View>
+          )}
         </View>
       </View>
     );
@@ -188,5 +219,26 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: 'black',
     transform: [{ translateY: 200 }],
+  },
+  drawMsg: {
+    fontSize: 30, 
+    fontWeight: 'bold', 
+   
+    color: '#757575'    
+  },
+  winningMsgX: {
+    fontSize: 30, 
+    fontWeight: 'bold', 
+    
+    color: '#D81B60'    
+  },
+  winningMsgO: {
+    fontSize: 30, 
+    fontWeight: 'bold', 
+    
+    color: 'deepskyblue'    
+  },
+  resetButton: {    
+    paddingTop: 100,
   },
 });
