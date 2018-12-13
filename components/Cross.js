@@ -36,13 +36,13 @@ export default class Cross extends React.Component {
    cross1: {
     width : 90,
     height: 8,        
-    backgroundColor: 'black',
+    backgroundColor: '#D81B60',
     position: 'absolute',
   },
   cross2: {
     width : 90,
     height: 8,        
-    backgroundColor: 'black',
+    backgroundColor: '#D81B60',
     position: 'absolute',
   },
   });
